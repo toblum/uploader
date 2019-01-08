@@ -7,6 +7,11 @@ h1 {
 	margin: 20px 0 20px 0;
 	color: white;
 	text-align: center;
+	font-size: 40px;
+}
+
+.uppy-size--md .uppy-Dashboard-dropFilesTitle {
+	font-size: 36px!important;
 }
 
 .DashboardContainer {
