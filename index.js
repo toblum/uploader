@@ -1,4 +1,5 @@
 const tus = require('tus-node-server');
+const request = require('request');
 
 const getTimestamp = () => {
 	var u = new Date();
@@ -27,11 +28,23 @@ const parseMetadataString = (metadata_string) => {
 	}, {});
 };
 
+const sendNotification = (fn) => {
+	const param = {value1: fn, Value1: fn};
+	request
+	.get('https://maker.ifttt.com/trigger/file_uploaded/with/key/' + process.env.IFTTT_KEY, {body: param, json: true})
+	.on('response', function(response) {
+		console.log(response.statusCode) // 200
+		console.log(response.headers['content-type']) // 'image/png'
+	})
+};
+
 const fileNameFromUrl = (req) => {
 	const metadata = parseMetadataString(req.headers["upload-metadata"]);
 	const filename = ((metadata || {}).filename || {}).decoded;
-	console.log("File uploaded:", filename);
-	return getTimestamp() + '_' + filename;
+	const ts_filename =  getTimestamp() + '_' + filename;
+	sendNotification(ts_filename);
+	console.log("File uploaded:", ts_filename);
+	return ts_filename;
 };
 
 const server = new tus.Server();
