@@ -49,6 +49,6 @@ app.use('/uploads', uploadApp);
 app.use(express.static('public'));
 
 const host = '127.0.0.1';
-const port = 1080;
+const port = process.env.PORT || 1080;
 app.listen(port, host);
 console.log(`Server started: ${host}:${port}`);
