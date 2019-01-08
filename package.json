@@ -1,0 +1,15 @@
+{
+  "name": "uploader",
+  "version": "1.0.0",
+  "description": "TUS compatible single page file uploader app using uppy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tobias Blum",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "tus-node-server": "^0.3.2"
+  }
+}

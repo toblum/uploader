@@ -1,0 +1,103 @@
+<html>
+	<head>
+		<title></title>
+		<link href="https://transloadit.edgly.net/releases/uppy/v0.29.0/dist/uppy.min.css" rel="stylesheet">
+		<link href="css/styles.css" rel="stylesheet">
+	</head>
+	<body>
+		<script src="https://cdn.jsdelivr.net/npm/es6-promise@4.2.5/dist/es6-promise.auto.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.0.0/dist/fetch.umd.min.js"></script>
+		<script src="https://transloadit.edgly.net/releases/uppy/v0.29.0/dist/uppy.min.js"></script>
+
+		<h1>Upload</h1>
+		<div class="DashboardContainer"></div>
+		<button id="uppyModalOpener" style="display:none">Open Modal</button>
+
+		<script>
+			var locale_de = {
+				// When `inline: false`, used as the screen reader label for the button that closes the modal.
+				closeModal: 'Schließen',
+				// Used as the screen reader label for the plus (+) button that shows the “Add more files” screen
+				addMoreFiles: 'Mehr Dateien hinzufügen',
+				// Used as the header for import panels, e.g., "Import from Google Drive".
+				importFrom: 'Import von %{name}',
+				// When `inline: false`, used as the screen reader label for the dashboard modal.
+				dashboardWindowTitle: 'Uppy Dashboard Fenster (Escape zum schließen)',
+				// When `inline: true`, used as the screen reader label for the dashboard area.
+				dashboardTitle: 'Uppy Dashboard',
+				// Shown in the Informer when a link to a file was copied to the clipboard.
+				copyLinkToClipboardSuccess: 'Link in die Zwischenablage kopiert.',
+				// Used when a link cannot be copied automatically — the user has to select the text from the
+				// input element below this string.
+				copyLinkToClipboardFallback: 'Folgende URL kopieren',
+				// Used as the hover title and screen reader label for buttons that copy a file link.
+				copyLink: 'Link kopieren',
+				// Used as the hover title and screen reader label for file source icons, e.g., "File source: Dropbox".
+				fileSource: 'Quelle: %{name}',
+				// Used as the label for buttons that accept and close panels (remote providers or metadata editor)
+				done: 'Fertig',
+				// Used as the screen reader label for buttons that remove a file.
+				removeFile: 'Datei entfernen',
+				// Used as the screen reader label for buttons that open the metadata editor panel for a file.
+				editFile: 'Datei bearbeiten',
+				// Shown in the panel header for the metadata editor. Rendered as "Editing image.png".
+				editing: 'Bearbeite %{file}',
+				// Text for a button shown on the file preview, used to edit file metadata
+				edit: 'Bearbeiten',
+				// Used as the screen reader label for the button that saves metadata edits and returns to the
+				// file list view.
+				finishEditingFile: 'Bearbeitung abschließen',
+				// Used as the label for the tab button that opens the system file selection dialog.
+				myDevice: 'Mein Gerät',
+				// Shown in the main dashboard area when no files have been selected, and one or more
+				// remote provider plugins are in use. %{browse} is replaced with a link that opens the system
+				// file selection dialog.
+				dropPasteImport: 'Dateien zum Hochladen ablegen, %{browse} oder importieren von',
+				// Shown in the main dashboard area when no files have been selected, and no provider
+				// plugins are in use. %{browse} is replaced with a link that opens the system
+				// file selection dialog.
+				dropPaste: 'Dateien zum Hochladen ablegen, einfügen oder %{browse}',
+				// This string is clickable and opens the system file selection dialog.
+				browse: 'auswählen',
+				// Used as the hover text and screen reader label for file progress indicators when
+				// they have been fully uploaded.
+				uploadComplete: 'Upload fertig',
+				// Used as the hover text and screen reader label for the buttons to resume paused uploads.
+				resumeUpload: 'Upload fortsetzen',
+				// Used as the hover text and screen reader label for the buttons to pause uploads.
+				pauseUpload: 'Upload pausieren',
+				// Used as the hover text and screen reader label for the buttons to retry failed uploads.
+				retryUpload: 'Upload nochmal versuchen',
+
+				// Used in a title, how many files are currently selected
+				xFilesSelected: {
+					0: '%{smart_count} file selected',
+					1: '%{smart_count} files selected'
+				},
+
+				// @uppy/status-bar strings:
+				uploading: 'Uploading',
+				complete: 'Complete'
+			};
+
+			var uppy = Uppy.Core({ debug: true, autoProceed: false })
+				.use(Uppy.Dashboard, { 
+					trigger: '#uppyModalOpener',
+					inline: true,
+					target: '.DashboardContainer',
+					replaceTargetContent: true,
+					showProgressDetails: true,
+					width: 600,
+					height: 600,
+					proudlyDisplayPoweredByUppy: false,
+					showLinkToFileUploadResult: false,
+					locale: {strings: locale_de}
+				})
+				// .use(Uppy.Webcam, { target: Uppy.Dashboard })
+				.use(Uppy.Tus, { endpoint: '/uploads/' });
+			uppy.on('success', (fileCount) => {
+				console.log(`${fileCount} files uploaded`)
+			});
+		</script>
+	</body>
+</html>
