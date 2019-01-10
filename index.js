@@ -1,7 +1,7 @@
-const tus = require('tus-node-server');
-const request = require('request');
+var tus = require('tus-node-server');
+var request = require('request');
 
-const getTimestamp = () => {
+var getTimestamp = function () {
 	var u = new Date();
 
 	return u.getUTCFullYear() +
@@ -13,11 +13,11 @@ const getTimestamp = () => {
 		'' + (u.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5);
 }
 
-const parseMetadataString = (metadata_string) => {
-	const kv_pair_list = metadata_string.split(',');
+var parseMetadataString = function (metadata_string) {
+	var kv_pair_list = metadata_string.split(',');
 
-	return kv_pair_list.reduce((metadata, kv_pair) => {
-		const [key, base64_value] = kv_pair.split(' ');
+	return kv_pair_list.reduce(function(metadata, kv_pair) {
+		var [key, base64_value] = kv_pair.split(' ');
 
 		metadata[key] = {
 			encoded: base64_value,
@@ -28,40 +28,39 @@ const parseMetadataString = (metadata_string) => {
 	}, {});
 };
 
-const sendNotification = (fn) => {
-	const param = {value1: fn, Value1: fn};
+var sendNotification = function (fn) {
+	var param = {value1: fn, Value1: fn};
 	request
 	.get('https://maker.ifttt.com/trigger/file_uploaded/with/key/' + process.env.IFTTT_KEY, {body: param, json: true})
 	.on('response', function(response) {
-		console.log(response.statusCode) // 200
-		console.log(response.headers['content-type']) // 'image/png'
+		console.log(response.statusCode, response.headers['content-type'])
 	})
 };
 
-const fileNameFromUrl = (req) => {
-	const metadata = parseMetadataString(req.headers["upload-metadata"]);
-	const filename = ((metadata || {}).filename || {}).decoded;
-	const ts_filename =  getTimestamp() + '_' + filename;
+var fileNameFromUrl = function (req) {
+	var metadata = parseMetadataString(req.headers["upload-metadata"]);
+	var filename = ((metadata || {}).filename || {}).decoded;
+	var ts_filename =  getTimestamp() + '_' + filename;
 	sendNotification(ts_filename);
 	console.log("File uploaded:", ts_filename);
 	return ts_filename;
 };
 
-const server = new tus.Server();
+var server = new tus.Server();
 server.datastore = new tus.FileStore({
 	path: '/files',
 	namingFunction: fileNameFromUrl
 });
 
-const express = require('express');
-const app = express();
-const uploadApp = express();
+var express = require('express');
+var app = express();
+var uploadApp = express();
 uploadApp.all('*', server.handle.bind(server));
 app.use('/uploads', uploadApp);
 
 app.use(express.static('public'));
 
-const host = '127.0.0.1';
-const port = process.env.PORT || 1080;
+var host = '127.0.0.1';
+var port = process.env.PORT || 1080;
 app.listen(port, host);
 console.log(`Server started: ${host}:${port}`);

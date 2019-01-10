@@ -95,8 +95,8 @@
 				})
 				// .use(Uppy.Webcam, { target: Uppy.Dashboard })
 				.use(Uppy.Tus, { endpoint: '/uploads/' });
-			uppy.on('success', (fileCount) => {
-				console.log(`${fileCount} files uploaded`)
+			uppy.on('success', function (fileCount) {
+				console.log(fileCount + ' files uploaded')
 			});
 		</script>
 	</body>
